@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket JSON Viewer</title>
+</head>
+<body>
+<h1>WebSocket JSON Data Viewer</h1>
+<textarea id="jsonContent" rows="10" cols="50" placeholder="JSON data will appear here..."></textarea>
+<br>
+<button onclick="sendUpdate()">Send Update</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<div id="notificationBox" style="margin-top: 20px; color: green; border: 1px solid #ccc; padding: 10px; display: none;">
+    <!-- Notification messages will appear here -->
+</div>
+<button onclick="clearNotification()" style="margin-top: 5px;">Clear Notification</button>
+
+<script>
+    function clearNotification() {
+        var notificationBox = document.getElementById('notificationBox');
+        notificationBox.style.display = 'none'; // Hide the notification box
+    }
+
+    function showNotification(message) {
+        var notificationBox = document.getElementById('notificationBox');
+        notificationBox.textContent = message; // Set the message text
+        notificationBox.style.display = 'block'; // Show the notification box
+    }
+
+    var stompClient = null;
+
+    function connect() {
+        var socket = new SockJS('http://192.168.0.208:8080/ws'); // Update with your server's IP #176.23.0.61
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/json', function (jsonData) {
+                var updateResponse = JSON.parse(jsonData.body);
+                var formattedTime = new Date(updateResponse.timestamp).toLocaleString();
+                console.log('Received update at ' + formattedTime + ': ', updateResponse.content);
+                document.getElementById('jsonContent').value = updateResponse.content;
+                showNotification('Updated at ' + formattedTime + ': ' + updateResponse.content);
+            });
+            stompClient.subscribe('/topic/notifications', function (message) {
+                showNotification(message.body); // Use this to show permanent messages
+            });
+
+            // Request the current JSON state immediately after subscribing
+            stompClient.send("/app/loadJson", {}, '');
+        }, function(error) {
+            console.log('Connection error: ' + error);
+            showNotification('Connection error: ' + error);
+        });
+    }
+
+    function sendUpdate() {
+        var jsonContent = document.getElementById('jsonContent').value;
+        try {
+            JSON.parse(jsonContent); // This checks if the JSON content is valid
+            stompClient.send("/app/updateJson", {}, jsonContent);
+        } catch (e) {
+            console.log('Invalid JSON:', e);
+            showNotification('Invalid JSON format.');
+        }
+    }
+
+    window.onload = connect;
+</script>
+
+</body>
+</html>
