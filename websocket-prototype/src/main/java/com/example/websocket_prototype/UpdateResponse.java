@@ -19,7 +19,7 @@ public class UpdateResponse {
 
     public void setContent(String content) {
         this.content = content;
-    }
+    }//somecomment
 
     public LocalDateTime getTimestamp() {
         return timestamp;
