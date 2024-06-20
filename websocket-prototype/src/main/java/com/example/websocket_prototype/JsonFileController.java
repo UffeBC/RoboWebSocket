@@ -5,15 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.io.IOException;
@@ -32,6 +30,8 @@ public class JsonFileController {
     private String JSON_FILE_PATH;
     @Value("${app.board-json-file-path}")
     private String JSON_BOARD_FILE_PATH;
+    @Value("${app.games-txt-file-path}")
+    private String TXT_GAMES_PATH;
     //private static final String JSON_FILE_PATH = "src\\main\\resources\\static\\daskjbadw.json";  // Check your file path
 
     @Autowired
@@ -58,7 +58,7 @@ public class JsonFileController {
         }
     }
 
-    @GetMapping("/game1/players")
+    @GetMapping("/games/game1/players")
     public String getJson() {
         try {
             Path path = Paths.get(JSON_FILE_PATH);
@@ -70,17 +70,40 @@ public class JsonFileController {
         }
     }
 
-    @GetMapping("/game1/board")
+    @GetMapping("/games")
+    public String getGamesTxt() {
+        try {
+            Path path = Paths.get(TXT_GAMES_PATH);
+            byte[] txtData = Files.readAllBytes(path);
+            return new String(txtData);
+        } catch (Exception e) {
+            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
+        }
+        return null;
+    }
+
+    @GetMapping("/games/game1/board")
     public String getBoardJson() {
         try {
             Path path = Paths.get(JSON_BOARD_FILE_PATH);
-            byte[] jsonData = Files.readAllBytes(path);
-            return new String(jsonData);
+            byte[] jsonBoardData = Files.readAllBytes(path);
+            return new String(jsonBoardData);
         } catch (Exception e) {
-            logger.error("Failed to read JSON file at " + JSON_FILE_PATH + ": " + e.getMessage());
+            logger.error("Failed to read JSON file at " + JSON_BOARD_FILE_PATH + ": " + e.getMessage());
             throw new JsonFileReadException("Error reading JSON file.", e);
         }
     }
+
+    @PutMapping("/games/game1/board")
+    public ResponseEntity<String> putBoardJson(@RequestBody String jsonBoardData) {
+        try {
+            Path path = Paths.get(JSON_BOARD_FILE_PATH);
+            Files.write(path, jsonBoardData.getBytes());
+            return ResponseEntity.ok("JSON data has been updated successfully.");
+        } catch (Exception e) {}
+        return null;
+    }
+
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(JsonFileReadException.class)
