@@ -10,6 +10,7 @@
 <textarea id="jsonContent" rows="10" cols="50" placeholder="JSON data will appear here..."></textarea>
 <br>
 <button onclick="sendUpdate()">Send Update</button>
+<button onclick="loadJson()">Load JSON</button>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -34,7 +35,7 @@
     var stompClient = null;
 
     function connect() {
-        var socket = new SockJS('http://192.168.0.208:8080/ws'); // Update with your server's IP #176.23.0.61
+        var socket = new SockJS('http://10.209.103.216:8080/ws'); // Update with your server's IP
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
@@ -66,6 +67,23 @@
             console.log('Invalid JSON:', e);
             showNotification('Invalid JSON format.');
         }
+    }
+
+    function loadJson() {
+        fetch('http://10.209.103.216:8080/json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('jsonContent').value = JSON.stringify(data, null, 2);
+            })
+            .catch(error => {
+                console.error('There has been a problem with your fetch operation:', error);
+                showNotification('Error loading JSON data.');
+            });
     }
 
     window.onload = connect;
