@@ -1,0 +1,436 @@
+{
+  "players": [
+    {
+      "name": "Player 1",
+      "color": "red",
+      "space": {
+        "x": 6,
+        "y": 0
+      },
+      "heading": "SOUTH",
+      "program": [
+        {
+          "card": {
+            "command": "MOVE3"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "AGAIN"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "TURNRIGHT"
+          },
+          "visible": true
+        },
+        {
+          "visible": false
+        },
+        {
+          "card": {
+            "command": "MOVEBACK"
+          },
+          "visible": false
+        }
+      ],
+      "cards": [
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "SANDBOX_ROUTINE"
+          },
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "UTURN"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "DAMAGE"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "MOVE1"
+          },
+          "visible": true
+        }
+      ],
+      "energyCubes": 0,
+      "spawnSpace": {
+        "x": 0,
+        "y": 0
+      },
+      "checkPoint": 0
+    },
+    {
+      "name": "Player 2",
+      "color": "green",
+      "space": {
+        "x": 0,
+        "y": 1
+      },
+      "heading": "NORTH",
+      "program": [
+        {
+          "card": {
+            "command": "UTURN"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "MOVE1"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "UTURN"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "AGAIN"
+          },
+          "visible": false
+        },
+        {
+          "card": {
+            "command": "AGAIN"
+          },
+          "visible": false
+        }
+      ],
+      "cards": [
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "POWER_UP"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "POWER_UP"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "TURNLEFT"
+          },
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        }
+      ],
+      "energyCubes": 0,
+      "spawnSpace": {
+        "x": 0,
+        "y": 1
+      },
+      "checkPoint": 0
+    },
+    {
+      "name": "Player 3",
+      "color": "blue",
+      "space": {
+        "x": 0,
+        "y": 2
+      },
+      "heading": "SOUTH",
+      "program": [
+        {
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "POWER_UP"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "SANDBOX_ROUTINE"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "MOVE2"
+          },
+          "visible": false
+        },
+        {
+          "card": {
+            "command": "MOVE1"
+          },
+          "visible": false
+        }
+      ],
+      "cards": [
+        {
+          "card": {
+            "command": "MOVE1"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "POWER_UP"
+          },
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "MOVE2"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "RIGHT_LEFT"
+          },
+          "visible": true
+        }
+      ],
+      "energyCubes": 1,
+      "spawnSpace": {
+        "x": 0,
+        "y": 2
+      },
+      "checkPoint": 0
+    },
+    {
+      "name": "Player 4",
+      "color": "orange",
+      "space": {
+        "x": 0,
+        "y": 3
+      },
+      "heading": "SOUTH",
+      "program": [
+        {
+          "card": {
+            "command": "AGAIN"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "POWER_UP"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "TURNLEFT"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "UTURN"
+          },
+          "visible": false
+        },
+        {
+          "card": {
+            "command": "MOVE1"
+          },
+          "visible": false
+        }
+      ],
+      "cards": [
+        {
+          "card": {
+            "command": "RIGHT_LEFT"
+          },
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "DAMAGE"
+          },
+          "visible": true
+        },
+        {
+          "card": {
+            "command": "MOVE1"
+          },
+          "visible": true
+        }
+      ],
+      "energyCubes": 1,
+      "spawnSpace": {
+        "x": 0,
+        "y": 3
+      },
+      "checkPoint": 0
+    }
+  ],
+  "current": {
+    "name": "Player 2",
+    "color": "green",
+    "space": {
+      "x": 0,
+      "y": 1
+    },
+    "heading": "NORTH",
+    "program": [
+      {
+        "card": {
+          "command": "UTURN"
+        },
+        "visible": true
+      },
+      {
+        "card": {
+          "command": "MOVE1"
+        },
+        "visible": true
+      },
+      {
+        "card": {
+          "command": "UTURN"
+        },
+        "visible": true
+      },
+      {
+        "card": {
+          "command": "AGAIN"
+        },
+        "visible": false
+      },
+      {
+        "card": {
+          "command": "AGAIN"
+        },
+        "visible": false
+      }
+    ],
+    "cards": [
+      {
+        "visible": true
+      },
+      {
+        "visible": true
+      },
+      {
+        "visible": true
+      },
+      {
+        "card": {
+          "command": "POWER_UP"
+        },
+        "visible": true
+      },
+      {
+        "card": {
+          "command": "POWER_UP"
+        },
+        "visible": true
+      },
+      {
+        "card": {
+          "command": "TURNLEFT"
+        },
+        "visible": true
+      },
+      {
+        "visible": true
+      },
+      {
+        "visible": true
+      }
+    ],
+    "energyCubes": 0,
+    "spawnSpace": {
+      "x": 0,
+      "y": 1
+    },
+    "checkPoint": 0
+  },
+  "phase": "ACTIVATION",
+  "step": 2,
+  "stepMode": true,
+  "spawnSpaces": [
+    {
+      "x": 0,
+      "y": 0
+    },
+    {
+      "x": 0,
+      "y": 1
+    },
+    {
+      "x": 0,
+      "y": 2
+    },
+    {
+      "x": 0,
+      "y": 3
+    }
+  ],
+  "map": "defaultboard"
+}

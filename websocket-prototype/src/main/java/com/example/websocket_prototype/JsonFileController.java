@@ -20,10 +20,40 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 
+// ALEX
+import static spark.Spark.*;
+
+import org.json.JSONArray;
+
+import java.io.File;
+import java.util.Arrays;
+
+public class GameServer {
+    public static void main(String[] args) {
+        port(8080);
+
+        get("/games", (req, res) -> {
+            File gamesDir = new File("resources/static/games");
+            if (gamesDir.exists() && gamesDir.isDirectory()) {
+                String[] games = gamesDir.list();
+                if (games != null) {
+                    JSONArray gamesArray = new JSONArray(Arrays.asList(games));
+                    res.type("application/json");
+                    return gamesArray.toString();
+                }
+            }
+            res.status(404);
+            return "Games directory not found or is not a directory";
+        });
+    }
+}
+//ALEX
+
 
 
 @RestController
 public class JsonFileController {
+
 
     private static final Logger logger = LoggerFactory.getLogger(JsonFileController.class);
     @Value("${app.json-file-path}")
@@ -58,7 +88,50 @@ public class JsonFileController {
         }
     }
 
-    @GetMapping("/games/game1/players")
+    @Value("${app.base-path}")
+    private String BASE_PATH;
+
+    @GetMapping("/games/{gameName}/players")
+    public String getPlayersJson(@PathVariable String gameName) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "players.json");
+            byte[] jsonData = Files.readAllBytes(path);
+            return new String(jsonData);
+        } catch (Exception e) {}
+        return null;
+    }
+
+    @PutMapping("/games/{gameName}/players")
+    public ResponseEntity<String> putPlayersJson(@PathVariable String gameName, @RequestBody String jsonBoardData) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "players.json");
+            Files.write(path, jsonBoardData.getBytes());
+            return ResponseEntity.ok("JSON data for players in " + gameName + " has been updated successfully.");
+        } catch (Exception e) {}
+        return null;
+    }
+
+    @GetMapping("/games/{gameName}/board")
+    public String getBoardJson(@PathVariable String gameName) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "board.json");
+            byte[] jsonBoardData = Files.readAllBytes(path);
+            return new String(jsonBoardData);
+        } catch (Exception e) {}
+        return null;
+    }
+
+    @PutMapping("/games/{gameName}/board")
+    public ResponseEntity<String> putBoardJson(@PathVariable String gameName, @RequestBody String jsonBoardData) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "board.json");
+            Files.write(path, jsonBoardData.getBytes());
+            return ResponseEntity.ok("JSON data for board in " + gameName + " has been updated successfully.");
+        } catch (Exception e) {}
+        return null;
+    }
+
+    /*@GetMapping("/games/game1/players")
     public String getJson() {
         try {
             Path path = Paths.get(JSON_FILE_PATH);
@@ -70,15 +143,13 @@ public class JsonFileController {
         }
     }
 
-    @GetMapping("/games")
-    public String getGamesTxt() {
+    @PutMapping("/games/game1/players")
+    public ResponseEntity<String> putPlayersJson(@RequestBody String jsonBoardData) {
         try {
-            Path path = Paths.get(TXT_GAMES_PATH);
-            byte[] txtData = Files.readAllBytes(path);
-            return new String(txtData);
-        } catch (Exception e) {
-            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
-        }
+            Path path = Paths.get(JSON_BOARD_FILE_PATH);
+            Files.write(path, jsonBoardData.getBytes());
+            return ResponseEntity.ok("JSON data has been updated successfully.");
+        } catch (Exception e) {}
         return null;
     }
 
@@ -102,7 +173,22 @@ public class JsonFileController {
             return ResponseEntity.ok("JSON data has been updated successfully.");
         } catch (Exception e) {}
         return null;
+    }*/
+
+
+    @GetMapping("/games")
+    public String getGamesTxt() {
+        try {
+            Path path = Paths.get(TXT_GAMES_PATH);
+            byte[] txtData = Files.readAllBytes(path);
+            return new String(txtData);
+        } catch (Exception e) {
+            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
+        }
+        return null;
     }
+
+
 
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
