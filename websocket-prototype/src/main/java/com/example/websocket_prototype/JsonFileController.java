@@ -14,7 +14,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -106,8 +110,8 @@ public class JsonFileController {
         try {
             Path path = Paths.get(BASE_PATH, gameName, "players.json");
             Files.write(path, jsonBoardData.getBytes());
-            return ResponseEntity.ok("JSON data for players in " + gameName + " has been updated successfully.");
-        } catch (Exception e) {}
+            return ResponseEntity.ok("JSON data.json for players in " + gameName + " has been updated successfully.");
+        } catch (Exception ignored) {}
         return null;
     }
 
@@ -126,55 +130,10 @@ public class JsonFileController {
         try {
             Path path = Paths.get(BASE_PATH, gameName, "board.json");
             Files.write(path, jsonBoardData.getBytes());
-            return ResponseEntity.ok("JSON data for board in " + gameName + " has been updated successfully.");
+            return ResponseEntity.ok("JSON data.json for board in " + gameName + " has been updated successfully.");
         } catch (Exception e) {}
         return null;
     }
-
-    /*@GetMapping("/games/game1/players")
-    public String getJson() {
-        try {
-            Path path = Paths.get(JSON_FILE_PATH);
-            byte[] jsonData = Files.readAllBytes(path);
-            return new String(jsonData);
-        } catch (Exception e) {
-            logger.error("Failed to read JSON file at " + JSON_FILE_PATH + ": " + e.getMessage());
-            throw new JsonFileReadException("Error reading JSON file.", e);
-        }
-    }
-
-    @PutMapping("/games/game1/players")
-    public ResponseEntity<String> putPlayersJson(@RequestBody String jsonBoardData) {
-        try {
-            Path path = Paths.get(JSON_BOARD_FILE_PATH);
-            Files.write(path, jsonBoardData.getBytes());
-            return ResponseEntity.ok("JSON data has been updated successfully.");
-        } catch (Exception e) {}
-        return null;
-    }
-
-    @GetMapping("/games/game1/board")
-    public String getBoardJson() {
-        try {
-            Path path = Paths.get(JSON_BOARD_FILE_PATH);
-            byte[] jsonBoardData = Files.readAllBytes(path);
-            return new String(jsonBoardData);
-        } catch (Exception e) {
-            logger.error("Failed to read JSON file at " + JSON_BOARD_FILE_PATH + ": " + e.getMessage());
-            throw new JsonFileReadException("Error reading JSON file.", e);
-        }
-    }
-
-    @PutMapping("/games/game1/board")
-    public ResponseEntity<String> putBoardJson(@RequestBody String jsonBoardData) {
-        try {
-            Path path = Paths.get(JSON_BOARD_FILE_PATH);
-            Files.write(path, jsonBoardData.getBytes());
-            return ResponseEntity.ok("JSON data has been updated successfully.");
-        } catch (Exception e) {}
-        return null;
-    }*/
-
 
     @GetMapping("/games")
     public String getGamesTxt() {
@@ -187,9 +146,6 @@ public class JsonFileController {
         }
         return null;
     }
-
-
-
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(JsonFileReadException.class)
