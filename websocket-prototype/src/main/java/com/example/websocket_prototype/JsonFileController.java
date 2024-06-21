@@ -14,6 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -25,6 +29,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 // ALEX
 //import static spark.Spark.*;
@@ -98,7 +106,26 @@ public class JsonFileController {
     private String BASE_PATH;
 
 
-
+    @GetMapping("/games/{gameName}/playersa")
+    public String getPlayersJson(@PathVariable String gameName) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "players.json");
+            byte[] jsonData = Files.readAllBytes(path);
+            return new String(jsonData);
+        } catch (Exception e) {}
+        return null;
+    }
+    /*
+    @PutMapping("/games/{gameName}/players")
+    public ResponseEntity<String> putPlayersJson(@PathVariable String gameName, @RequestBody String jsonBoardData) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "players.json");
+            Files.write(path, jsonBoardData.getBytes());
+            return ResponseEntity.ok("JSON data.json for players in " + gameName + " has been updated successfully.");
+        } catch (Exception ignored) {}
+        return null;
+    }
+*/
     @GetMapping("/games/{gameName}/board")
     public String getBoardJson(@PathVariable String gameName) {
         try {
@@ -121,9 +148,9 @@ public class JsonFileController {
 
     @GetMapping("/games")
     public List<String> getGames() {
-        File directory = new File("src/main/resources/static/games");
+        File directory = new File(TXT_GAMES_PATH);
         if (directory.exists() && directory.isDirectory()) {
-            return Arrays.stream(directory.listFiles())
+            return Arrays.stream(Objects.requireNonNull(directory.listFiles()))
                     .filter(File::isDirectory)
                     .map(File::getName)
                     .filter(name -> name.matches("game\\d+"))
@@ -138,26 +165,27 @@ public class JsonFileController {
 
     @GetMapping("/games/{game}/players")
     public String getPlayers(@PathVariable String game) {
-        File playersFile = new File("src/main/resources/static/games/" + game + "/players.txt");
+        File playersFile = new File(TXT_GAMES_PATH +"/"+ game + "/players.txt");
         if (playersFile.exists()) {
             try {
                 return new String(Files.readAllBytes(playersFile.toPath()));
             } catch (IOException e) {
-                throw new RuntimeException("Failed to read players.txt file", e);
+                throw new RuntimeException("Failed to read players.json file", e);
             }
         } else {
-            throw new RuntimeException("players.txt file not found for game: " + game);
+            throw new RuntimeException("players.json file not found for game: " + game);
         }
     }
 
+
     @PostMapping("/games/{game}/players")
     public String addPlayer(@PathVariable String game, @RequestParam String playerName) {
-        File playersFile = new File("src/main/resources/static/games/" + game + "/players.txt");
+        File playersFile = new File(TXT_GAMES_PATH + game + "/Players.txt");
         try {
-            if (!playersFile.exists()) {
+            /*if (!playersFile.exists()) {
                 playersFile.getParentFile().mkdirs();
-                playersFile.createNewFile();
-            }
+                //playersFile.createNewFile();
+            }*/
 
             List<String> currentPlayers;
             try (Stream<String> lines = Files.lines(playersFile.toPath())) {
@@ -185,8 +213,31 @@ public class JsonFileController {
     }
 
 
+    @PutMapping("/games/{game}/players")
+    public String addaPlayer(@PathVariable String game, @RequestParam String playerName) {
+        File playersFile = new File(TXT_GAMES_PATH + game + "/Players.txt");
+        try {
+            Path path = Paths.get(TXT_GAMES_PATH);
+            byte[] txtData = Files.readAllBytes(path);
+            return new String(txtData);
+        } catch (Exception e) {
+            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
+        }
+        return null;
+    }
 
-
+/*
+    @GetMapping("/games")
+    public String getGamesTxt() {
+        try {
+            Path path = Paths.get(TXT_GAMES_PATH);
+            byte[] txtData = Files.readAllBytes(path);
+            return new String(txtData);
+        } catch (Exception e) {
+            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
+        }
+        return null;
+    }*/
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(JsonFileReadException.class)
