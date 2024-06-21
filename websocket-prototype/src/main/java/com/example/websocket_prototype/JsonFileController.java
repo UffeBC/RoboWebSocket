@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 // ALEX
 //import static spark.Spark.*;
@@ -137,19 +138,51 @@ public class JsonFileController {
 
     @GetMapping("/games/{game}/players")
     public String getPlayers(@PathVariable String game) {
-        File playersFile = new File("src/main/resources/static/games/" + game + "/players.json");
+        File playersFile = new File("src/main/resources/static/games/" + game + "/players.txt");
         if (playersFile.exists()) {
             try {
                 return new String(Files.readAllBytes(playersFile.toPath()));
             } catch (IOException e) {
-                throw new RuntimeException("Failed to read players.json file", e);
+                throw new RuntimeException("Failed to read players.txt file", e);
             }
         } else {
-            throw new RuntimeException("players.json file not found for game: " + game);
+            throw new RuntimeException("players.txt file not found for game: " + game);
         }
     }
 
+    @PostMapping("/games/{game}/players")
+    public String addPlayer(@PathVariable String game, @RequestParam String playerName) {
+        File playersFile = new File("src/main/resources/static/games/" + game + "/players.txt");
+        try {
+            if (!playersFile.exists()) {
+                playersFile.getParentFile().mkdirs();
+                playersFile.createNewFile();
+            }
 
+            List<String> currentPlayers;
+            try (Stream<String> lines = Files.lines(playersFile.toPath())) {
+                currentPlayers = lines.flatMap(line -> Stream.of(line.split(",\n")))
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+            }
+
+            if (currentPlayers.contains(playerName)) {
+                return "Player already exists.";
+            }
+
+            try (FileWriter writer = new FileWriter(playersFile, true)) {
+                if (currentPlayers.isEmpty()) {
+                    writer.write(playerName);
+                } else {
+                    writer.write(",\n" + playerName);
+                }
+            }
+
+            return "Player added successfully.";
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write to players.txt file", e);
+        }
+    }
 
 
 
