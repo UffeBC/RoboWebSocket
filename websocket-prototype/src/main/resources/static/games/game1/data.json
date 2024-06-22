@@ -1,101 +1,63 @@
 {
-  "players": [
-    {
-      "name": "Player 1",
-      "color": "red",
-      "space": {
-        "x": 6,
-        "y": 0
-      },
-      "heading": "SOUTH",
-      "energyCubes": 0,
-      "spawnSpace": {
-        "x": 0,
-        "y": 0
-      },
-      "checkPoint": 0
+  "players" : [ {
+    "name" : "Player 1",
+    "color" : "red",
+    "space" : {
+      "x" : 6,
+      "y" : 0
     },
-    {
-      "name": "Player 2",
-      "color": "green",
-      "space": {
-        "x": 0,
-        "y": 1
-      },
-      "heading": "NORTH",
-      "energyCubes": 0,
-      "spawnSpace": {
-        "x": 0,
-        "y": 1
-      },
-      "checkPoint": 0
+    "heading" : "SOUTH",
+    "energyCubes" : 0,
+    "spawnSpace" : {
+      "x" : 0,
+      "y" : 0
     },
-    {
-      "name": "Player 3",
-      "color": "blue",
-      "space": {
-        "x": 0,
-        "y": 2
-      },
-      "heading": "SOUTH",
-      "energyCubes": 1,
-      "spawnSpace": {
-        "x": 0,
-        "y": 2
-      },
-      "checkPoint": 0
+    "checkPoint" : 0
+  }, {
+    "name" : "Player 2",
+    "color" : "green",
+    "space" : {
+      "x" : 0,
+      "y" : 1
     },
-    {
-      "name": "Player 4",
-      "color": "orange",
-      "space": {
-        "x": 0,
-        "y": 3
-      },
-      "heading": "SOUTH",
-      "energyCubes": 1,
-      "spawnSpace": {
-        "x": 0,
-        "y": 3
-      },
-      "checkPoint": 0
-    }
-  ],
-  "current": {
-    "name": "Player 2",
-    "color": "green",
-    "space": {
-      "x": 0,
-      "y": 1
+    "heading" : "NORTH",
+    "energyCubes" : 0,
+    "spawnSpace" : {
+      "x" : 0,
+      "y" : 1
     },
-    "heading": "NORTH",
-    "energyCubes": 0,
-    "spawnSpace": {
-      "x": 0,
-      "y": 1
+    "checkPoint" : 0
+  } ],
+  "current" : {
+    "name" : "Player 1",
+    "color" : "red",
+    "space" : {
+      "x" : 6,
+      "y" : 0
     },
-    "checkPoint": 0
+    "heading" : "SOUTH",
+    "energyCubes" : 0,
+    "spawnSpace" : {
+      "x" : 0,
+      "y" : 0
+    },
+    "checkPoint" : 0
   },
-  "phase": "ACTIVATION",
-  "step": 2,
-  "stepMode": true,
-  "spawnSpaces": [
-    {
-      "x": 0,
-      "y": 0
-    },
-    {
-      "x": 0,
-      "y": 1
-    },
-    {
-      "x": 0,
-      "y": 2
-    },
-    {
-      "x": 0,
-      "y": 3
-    }
-  ],
-  "map": "defaultboard"
+  "phase" : "ACTIVATION",
+  "step" : 2,
+  "stepMode" : true,
+  "spawnSpaces" : [ {
+    "x" : 0,
+    "y" : 0
+  }, {
+    "x" : 0,
+    "y" : 1
+  }, {
+    "x" : 0,
+    "y" : 2
+  }, {
+    "x" : 0,
+    "y" : 3
+  } ],
+  "map" : "defaultboard"
 }

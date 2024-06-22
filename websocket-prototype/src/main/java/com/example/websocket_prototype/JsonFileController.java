@@ -106,7 +106,7 @@ public class JsonFileController {
     private String BASE_PATH;
 
 
-    @GetMapping("/games/{gameName}/playersa")
+    @GetMapping("/games/{gameName}/playersb")
     public String getPlayersJson(@PathVariable String gameName) {
         try {
             Path path = Paths.get(BASE_PATH, gameName, "players.json");
@@ -115,8 +115,8 @@ public class JsonFileController {
         } catch (Exception e) {}
         return null;
     }
-    /*
-    @PutMapping("/games/{gameName}/players")
+/*
+    @PostMapping("/games/{gameName}/players")
     public ResponseEntity<String> putPlayersJson(@PathVariable String gameName, @RequestBody String jsonBoardData) {
         try {
             Path path = Paths.get(BASE_PATH, gameName, "players.json");
@@ -124,8 +124,8 @@ public class JsonFileController {
             return ResponseEntity.ok("JSON data.json for players in " + gameName + " has been updated successfully.");
         } catch (Exception ignored) {}
         return null;
-    }
-*/
+    }*/
+
     @GetMapping("/games/{gameName}/board")
     public String getBoardJson(@PathVariable String gameName) {
         try {
@@ -146,6 +146,28 @@ public class JsonFileController {
         return null;
     }
 
+    //
+    @GetMapping("/games/{gameName}/data")
+    public String getDataJson(@PathVariable String gameName) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "data.json");
+            byte[] jsonBoardData = Files.readAllBytes(path);
+            return new String(jsonBoardData);
+        } catch (Exception e) {}
+        return null;
+    }
+
+    @PutMapping("/games/{gameName}/data")
+    public ResponseEntity<String> putDataJson(@PathVariable String gameName, @RequestBody String jsonBoardData) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "data.json");
+            Files.write(path, jsonBoardData.getBytes());
+            return ResponseEntity.ok("JSON data.json for game in " + gameName + " has been updated successfully.");
+        } catch (Exception e) {}
+        return null;
+    }
+    //
+
     @GetMapping("/games")
     public List<String> getGames() {
         File directory = new File(TXT_GAMES_PATH);
@@ -162,10 +184,10 @@ public class JsonFileController {
 
 
 
-
-    @GetMapping("/games/{game}/players")
+/*
+    @GetMapping("/games/{game}/playersv")
     public String getPlayers(@PathVariable String game) {
-        File playersFile = new File(TXT_GAMES_PATH +"/"+ game + "/players.txt");
+        File playersFile = new File(TXT_GAMES_PATH +"/"+ game + "/Players.txt");
         if (playersFile.exists()) {
             try {
                 return new String(Files.readAllBytes(playersFile.toPath()));
@@ -176,16 +198,97 @@ public class JsonFileController {
             throw new RuntimeException("players.json file not found for game: " + game);
         }
     }
+*/
+/*
+
+    @PostMapping("/games/{game}/playersv")
+    public String addPlayer(@PathVariable String game, @RequestParam String playerName) {
+        File playersFile = new File(TXT_GAMES_PATH + game + "/Players");
+        try {
+            if (!playersFile.exists()) {
+                playersFile.getParentFile().mkdirs();
+                playersFile.createNewFile();
+            }
+
+            List<String> currentPlayers;
+            try (Stream<String> lines = Files.lines(playersFile.toPath())) {
+                currentPlayers = lines.flatMap(line -> Stream.of(line.split(",\n")))
+                        .map(String::trim)
+                        .collect(Collectors.toList());
+            }
+
+            if (currentPlayers.contains(playerName)) {
+                return "Player already exists.";
+            }
+
+            try (FileWriter writer = new FileWriter(playersFile, true)) {
+                if (currentPlayers.isEmpty()) {
+                    writer.write(playerName);
+                } else {
+                    writer.write(",\n" + playerName);
+                }
+            }
+
+            return "Player added successfully.";
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to write to players.txt file", e);
+        }
+    }
+    */
+
+
+    /*@PutMapping("/games/{game}/playersv")
+    public String addaPlayer(@PathVariable String game, @RequestParam String playerName) {
+        File playersFile = new File(TXT_GAMES_PATH + game + "/Players.txt");
+        try {
+            Path path = Paths.get(TXT_GAMES_PATH);
+            byte[] txtData = Files.readAllBytes(path);
+            return new String(txtData);
+        } catch (Exception e) {
+            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
+        }
+        return null;
+    }*/
+
+/*
+    @GetMapping("/games")
+    public String getGamesTxt() {
+        try {
+            Path path = Paths.get(TXT_GAMES_PATH);
+            byte[] txtData = Files.readAllBytes(path);
+            return new String(txtData);
+        } catch (Exception e) {
+            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
+        }
+        return null;
+    }*/
+
+    //NEW
+    //EW
+    //NEW
+    @GetMapping("/games/{game}/players")
+    public String getPlayers(@PathVariable String game) {
+        File playersFile = new File(TXT_GAMES_PATH +"/"+ game + "/players.txt");
+        if (playersFile.exists()) {
+            try {
+                return new String(Files.readAllBytes(playersFile.toPath()));
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to read players.txt file", e);
+            }
+        } else {
+            throw new RuntimeException("players.txt file not found for game: " + game);
+        }
+    }
 
 
     @PostMapping("/games/{game}/players")
     public String addPlayer(@PathVariable String game, @RequestParam String playerName) {
-        File playersFile = new File(TXT_GAMES_PATH + game + "/Players.txt");
+        File playersFile = new File(TXT_GAMES_PATH +"/"+ game + "/players.txt");
         try {
-            /*if (!playersFile.exists()) {
+            if (!playersFile.exists()) {
                 playersFile.getParentFile().mkdirs();
-                //playersFile.createNewFile();
-            }*/
+                playersFile.createNewFile();
+            }
 
             List<String> currentPlayers;
             try (Stream<String> lines = Files.lines(playersFile.toPath())) {
@@ -212,32 +315,10 @@ public class JsonFileController {
         }
     }
 
+    //NEW
+    //NEW
+    //NEW
 
-    @PutMapping("/games/{game}/players")
-    public String addaPlayer(@PathVariable String game, @RequestParam String playerName) {
-        File playersFile = new File(TXT_GAMES_PATH + game + "/Players.txt");
-        try {
-            Path path = Paths.get(TXT_GAMES_PATH);
-            byte[] txtData = Files.readAllBytes(path);
-            return new String(txtData);
-        } catch (Exception e) {
-            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
-        }
-        return null;
-    }
-
-/*
-    @GetMapping("/games")
-    public String getGamesTxt() {
-        try {
-            Path path = Paths.get(TXT_GAMES_PATH);
-            byte[] txtData = Files.readAllBytes(path);
-            return new String(txtData);
-        } catch (Exception e) {
-            logger.error("Failed to read TXT file at " + TXT_GAMES_PATH + ": " + e.getMessage());
-        }
-        return null;
-    }*/
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(JsonFileReadException.class)
