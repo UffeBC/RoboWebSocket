@@ -21,9 +21,11 @@ import java.io.InputStreamReader;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
@@ -146,8 +148,8 @@ public class JsonFileController {
         return null;
     }
 
-    //
-    @GetMapping("/games/{gameName}/data")
+    // u17
+    /*@GetMapping("/games/{gameName}/data")
     public String getDataJson(@PathVariable String gameName) {
         try {
             Path path = Paths.get(BASE_PATH, gameName, "data.json");
@@ -155,18 +157,46 @@ public class JsonFileController {
             return new String(jsonBoardData);
         } catch (Exception e) {}
         return null;
+    }*/
+    @GetMapping("/games/{gameName}/data")
+    public ResponseEntity<String> getDataJson(@PathVariable String gameName) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "data.json");
+            byte[] jsonBoardData = Files.readAllBytes(path);
+            return ResponseEntity.ok(new String(jsonBoardData, StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error accessing data for " + gameName);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred");
+        }
     }
 
-    @PutMapping("/games/{gameName}/data")
+
+    //u17
+    /*@PutMapping("/games/{gameName}/data")
     public ResponseEntity<String> putDataJson(@PathVariable String gameName, @RequestBody String jsonBoardData) {
         try {
             Path path = Paths.get(BASE_PATH, gameName, "data.json");
             Files.write(path, jsonBoardData.getBytes());
             return ResponseEntity.ok("JSON data.json for game in " + gameName + " has been updated successfully.");
-        } catch (Exception e) {}
-        return null;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }*/
+
+    @PutMapping("/games/{gameName}/data")
+    public ResponseEntity<String> putDataJson(@PathVariable String gameName, @RequestBody String jsonBoardData) {
+        try {
+            Path path = Paths.get(BASE_PATH, gameName, "data.json");
+            Files.writeString(path, jsonBoardData, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+            return ResponseEntity.ok("JSON data.json for game " + gameName + " has been updated successfully.");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to write data for " + gameName);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error occurred");
+        }
     }
-    //
+
 
     @GetMapping("/games")
     public List<String> getGames() {
